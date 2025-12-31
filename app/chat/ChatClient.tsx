@@ -61,7 +61,7 @@ export default function ChatClient() {
         <main className="min-h-screen bg-black text-white flex">
             <div className="flex-1 flex flex-col relative">
                 {/* HEADER */}
-                <header className="fixed bg-black top-0 w-full z-10 flex items-center justify-between px-6 py-4 border-b border-white/5">
+                <header className="sticky bg-black top-0 w-full z-10 flex items-center justify-between px-6 py-4 border-b border-white/5">
                     <div>
                         <h1 className="text-lg font-semibold">
                             Voi
