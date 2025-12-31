@@ -20,21 +20,6 @@ export default function ChatClient() {
     const bottomRef = useRef<HTMLDivElement | null>(null);
     const chatRef = useRef<HTMLDivElement | null>(null);
 
-    // menyimpan pesan sementara ke localstorage
-    useEffect(() => {
-        if (messages.length > 0 ) {
-            localStorage.setItem("guest_chat", JSON.stringify(messages));
-        }
-    }, [messages]);
-
-    // mengambil pesan dari localstorage
-    useEffect(() => {
-        const saved = localStorage.getItem("guest_chat");
-        if (saved) {
-            setMessages(JSON.parse(saved));
-        }
-    }, []);
-
     // memeriksa pengguna sudah login
     useEffect(() => {
         // setLoggedIn(isLoggedIn());

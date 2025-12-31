@@ -81,6 +81,67 @@ export default function ChatInput({
   // panel +
   const plusRef = useRef<HTMLButtonElement | null>(null);
 
+  // mic
+  const [isRecord, setIsRecord] = useState(false);
+  const recordRef = useRef<MediaRecorder | null>(null);
+  const streamRef = useRef<MediaStream | null>(null);
+  const chunkRef = useRef<Blob[]>([]);
+  const recognitionRef = useRef<any>(null);
+
+  const handleMicClick = () => {
+    const SpeechRecognition =
+      (window as any).SpeechRecognition ||
+      (window as any).webkitSpeechRecognition;
+
+    if (!SpeechRecognition) {
+      alert("Speech recognition not supported in this browser");
+      return;
+    }
+
+    // STOP
+    if (isRecord) {
+      recognitionRef.current?.stop();
+      setIsRecord(false);
+      return;
+    }
+
+    // START
+    const recognition = new SpeechRecognition();
+    recognition.lang = "id-ID"; // ganti "en-US" kalau mau English
+    recognition.interimResults = true;
+    recognition.continuous = true;
+
+    recognition.onresult = (event: any) => {
+      let transcript = "";
+
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        transcript += event.results[i][0].transcript;
+      }
+
+      const textarea = textareaRef.current;
+      if (!textarea) return;
+
+      textarea.value = transcript;
+
+      // trigger auto resize
+      textarea.style.height = "40px";
+      textarea.style.height = textarea.scrollHeight + "px";
+      setExpanded(textarea.scrollHeight > 40);
+    };
+
+    recognition.onerror = () => {
+      setIsRecord(false);
+    };
+
+    recognition.onend = () => {
+      setIsRecord(false);
+    };
+
+    recognition.start();
+    recognitionRef.current = recognition;
+    setIsRecord(true);
+  };
+
   return (
     <div
       className={`
@@ -116,7 +177,7 @@ export default function ChatInput({
       w-48
       bg-[#1f1f1f]
       rounded-2xl
-      shadow-xl shadow-black/40
+      shadow-md shadow-black/40
       p-2
       flex flex-col gap-1
     "
@@ -169,14 +230,25 @@ export default function ChatInput({
 
       {/* MIC — TRANSPARENT */}
       <button
-        className="
+        type="button"
+        aria-label="Voice input"
+        onClick={handleMicClick}
+        title={isRecord ? "Stop Recording" : "Start Recording"}
+        className={`
           absolute right-13 bottom-2 z-10
           w-10 h-10 rounded-full
           flex items-center justify-center
-          text-gray-300
-          hover:text-white hover:bg-white/10
+          text-white
+          hover:bg-white/10
           transition
-        "
+          active:scale-95
+          ${isRecord
+            ? "bg-red-500 hover:bg-red-600"
+            : "bg-transparent"
+          }
+
+          `}
+
       >
         <i className="fa-solid fa-microphone text-lg"></i>
       </button>
