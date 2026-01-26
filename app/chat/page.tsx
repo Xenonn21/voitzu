@@ -1,8 +1,6 @@
-import ChatClient from "@/app/chat/ChatClient";
+import ChatClient from "./ChatClient";
 
-export default async function ChatPage() {
-    // trigger Next.js route loading
-    await new Promise((resolve) => setTimeout(resolve, 600));
+export default function ChatPage() {
 
-    return <ChatClient />;
+  return <ChatClient />;
 }

@@ -12,7 +12,7 @@ export default function Home() {
 
         {/* Brand Mark */}
         <div className="mb-6 text-[10px] tracking-[0.35em] text-gray-500 uppercase">
-          Arcana · Void
+          Arcane · Void
         </div>
 
         {/* Title */}

@@ -46,7 +46,7 @@ export default function ForgotClient() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full h-11 px-4 rounded-xl bg-[#1a1a1a] text-white
-                border border-transparent focus:border-purple-500 focus:outline-none
+                border border-transparent border-none outline-none
                 transition duration-200
                 appearance-none"
               />
