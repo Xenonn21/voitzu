@@ -587,7 +587,7 @@ export default function ChatClient() {
       await supabase.from("messages").delete().eq("chat_session_id", sessionId);
       const { error } = await supabase.from("chat_sessions").delete().eq("id", sessionId);
       if (error) {
-        console.error("Delete session error:", error);
+        console.error("Delete session error", error);
         toast("Gagal menghapus obrolan");
       } else {
         setMessages([]);
@@ -738,7 +738,8 @@ export default function ChatClient() {
 
   /* ================= UI ================= */
   return (
-    <main className="min-h-screen bg-black text-white flex">
+    // make layout stack on small screens and side-by-side on md+
+    <main className="min-h-screen bg-black text-white flex flex-col md:flex-row">
       {user && (
         <ChatSidebar
           key={sidebarRefreshKey}
@@ -778,6 +779,7 @@ export default function ChatClient() {
       <button
         onClick={() => setSidebarOpen(true)}
         className="md:hidden text-gray-400 hover:text-white"
+        aria-label="Open sidebar"
       >
         ☰
       </button>
@@ -938,8 +940,8 @@ export default function ChatClient() {
 </header>
 
         {/* CHAT */}
-        <div className="  flex-1 flex flex-col pt-5">
-          <section ref={chatRef} className="flex-1 overflow-y-auto">
+        <div className="flex-1 flex flex-col pt-5 min-h-0">{/* min-h-0 to make flex child scroll correctly */}
+          <section ref={chatRef} className="flex-1 overflow-y-auto px-0 md:px-0">
             {loadingMessages && (
               <p className="text-center text-gray-500 text-sm mt-10">
                 Loading chat...
@@ -948,22 +950,17 @@ export default function ChatClient() {
 
             {!loadingMessages && messages.length === 0 && <TextAnimation />}
 
-            <div className="mx-auto max-w-4xl px-6 py-8 space-y-6">
+            <div className="mx-auto w-full max-w-4xl px-4 sm:px-6 py-8 space-y-6">
               {messages.map((m) => (
                 <div
                   key={m.id}
                   className={`flex gap-2 ${m.role === "user" ? "justify-end" : "justify-start"
                     }`}
                 >
-                  {m.role === "assistant" && (
-                    <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold">
-                      <img src="/favicon.ico" alt="" />
-                    </div>
-                  )}
-
+                 
                   <div
-                    className={`px-4 py-3 rounded-2xl text-sm max-w-[90%] min-w-0
-  prose prose-invert prose-sm space-y-4
+                    className={`px-4 py-3 rounded-2xl text-sm max-w-[95%] min-w-0
+  prose prose-invert prose-sm space-y-4 break-words whitespace-pre-wrap
   ${m.role === "user"
                         ? "bg-[#2f2f2f] rounded-br-sm"
                         : "bg-[#1f1f1f] rounded-bl-sm"
@@ -1033,7 +1030,7 @@ export default function ChatClient() {
               {waitingAI && (
                 <div className="flex gap-2 justify-start">
                   <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-indigo-600 flex items-center justify-center">
-                    <img src="/favicon.ico" alt="" />
+                    <img src="/favicon.ico" alt="" className="w-6 h-6" />
                   </div>
                   <div className="bg-[#1f1f1f] rounded-2xl rounded-bl-sm">
                     <LoadingBubble />
@@ -1045,8 +1042,8 @@ export default function ChatClient() {
             </div>
           </section>
 
-          <footer className="sticky bottom-0 bg-black">
-            <div className="mx-auto max-w-4xl">
+          <footer className="sticky bottom-0 bg-gradient-to-t from-[#000] via-[#000]/90 to-[#1f1f1f]/0">
+            <div className="mx-auto w-full max-w-4xl px-4 sm:px-6">
               {/* Pass modal callbacks to ChatInput so child can ask parent to open modal */}
               <ChatInput onSend={handleSend} onOpenImage={openImageModal} onOpenFile={openFileModalFromChild} />
               <p className="text-[10px] text-gray-500 text-center mb-2">
@@ -1277,17 +1274,17 @@ export default function ChatClient() {
                           setSessionId(r.id);
                           setOverlay(null);
                         }}
-                        className={`w-full text-left px-3 py-2 rounded-lg hover:bg-white/5 flex items-center justify-between ${r.pinned ? "bg-gradient-to-r from-purple-600 to-indigo-600/10" : ""}`}
+                        className={`w-full text-left px-3 py-2 rounded-lg hover:bg-white/5 flex items-center justify-between ${r.pinned ? "" : ""}`}
                       >
                         <div className="flex items-center gap-2">
                           {r.pinned ? <Pin size={14} className="text-purple-400" /> : null}
-                          <span className="truncate">{r.title || "New Chat"}</span>
+                          <span className="truncate" style={{ maxWidth: 220 }}>{r.title || "New Chat"}</span>
                         </div>
                         <span className="text-xs text-gray-400">{new Date(r.created_at).toLocaleString()}</span>
                       </button>
                     ))}
                   {!searchLoading && recentList.length === 0 && (
-                    <div className="text-sm text-gray-400">Belum ada obrolan.</div>
+                    <div className="text-sm text-gray-400">No recent chats.</div>
                   )}
                 </div>
               </div>
@@ -1332,10 +1329,10 @@ export default function ChatClient() {
                       <img
                         src={img.url}
                         alt={img.name}
-                        className="w-full h-40 object-cover"
+                        className="w-full h-32 sm:h-36 md:h-40 object-cover"
                         loading="lazy"
                       />
-                      <div className="p-2 text-xs truncate text-gray-300">{img.name}</div>
+                      <div className="p-2 text-xs truncate text-gray-300" title={img.name}>{img.name}</div>
                     </div>
                   ))}
                 </div>

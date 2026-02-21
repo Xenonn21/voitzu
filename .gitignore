@@ -20,12 +20,6 @@
 # production
 /build
 
-# lib
-/app/lib
-
-# api
-/app/api
-
 # misc
 .DS_Store
 *.pem

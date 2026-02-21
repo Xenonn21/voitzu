@@ -1191,7 +1191,7 @@ export default function ChatSidebar({
                 ) : (
                   <button
                     onClick={() => onSelectChat(c.id)}
-                    className={`w-full h-10 rounded-lg hover:bg-white/5 px-3 text-left truncate flex items-center gap-2 ${c.pinned ? 'bg-gradient-to-r from-purple-700/25 to-indigo-700/5' : ''}`}
+                    className={`w-full h-10 rounded-lg hover:bg-white/5 px-3 text-left truncate flex items-center gap-2 ${c.pinned ? '' : ''}`}
                   >
                     {c.pinned && <Pin size={14} className="text-indigo-400" />}
                     <span className="truncate">{c.title || "New Chat"}</span>
@@ -1407,13 +1407,6 @@ export default function ChatSidebar({
               transition={{ duration: 0.15 }}
               className="w-[95%] max-w-3xl bg-[#0b0b0b] rounded-2xl p-5"
             >
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-lg font-semibold">Profile</h3>
-                <div className="flex items-center gap-2">
-                  {/* Close: revert form to saved state (but do not trigger storage actions) */}
-                  <button onClick={() => { resetProfileForm(); setProfileOpen(false); }} className="px-3 py-1 rounded-lg bg-white/10">Close</button>
-                </div>
-              </div>
 
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 {/* Avatar area */}
