@@ -63,7 +63,9 @@ export default function ChatSidebar({
   const [openMenuId, setOpenMenuId] = useState<string | null>(null);
   const dropdownRef = useRef<HTMLDivElement | null>(null);
   const [anchorRect, setAnchorRect] = useState<DOMRect | null>(null);
-
+  const [mounted, setMounted] = useState(false);
+  const [settingsVisible, setSettingsVisible] = useState(false);
+  const [animateIn, setAnimateIn] = useState(false);
   // NOTE: avatar handling changed below to support initial fallback with deterministic color
   const initialName = user?.user_metadata?.name || user?.email || "";
   const email = user?.email || "";
@@ -254,6 +256,17 @@ export default function ChatSidebar({
       }
     })();
   }, [user]);
+
+useEffect(() => {
+  if (settingsOpen) {
+    setMounted(true);
+
+    // penting: delay supaya browser render posisi awal dulu
+    setTimeout(() => setAnimateIn(true), 10);
+  } else {
+    setAnimateIn(false);
+  }
+}, [settingsOpen]);
 
   /* ================= when avatarStoragePath changes -> create signed url ================= */
   useEffect(() => {
@@ -978,7 +991,7 @@ export default function ChatSidebar({
             .order("created_at", { ascending: false })
             .limit(20);
           if (logsData) setProfileLogs(logsData);
-        } catch (e) {}
+        } catch (e) { }
       }
     } catch (e) {
       console.error(e);
@@ -1058,12 +1071,22 @@ export default function ChatSidebar({
           flex flex-col transition-all duration-300
           ${mobileOpen ? "translate-x-0" : "-translate-x-full"}
           md:translate-x-0
-          ${collapsed ? "md:w-16" : "w-56 md:w-60"}
+          ${collapsed ? "md:w-16" : "w-75 md:w-60"}
         `}
       >
         {/* HEADER */}
         <div className="flex items-center justify-between p-4">
-          <Image src="/favicon.ico" alt="Voitzu" width={26} height={26} />
+          <div className="flex gap-1 items-center"
+          >
+
+            <Image src="/favicon.ico" alt="Voitzu" width={26} height={26} />
+            {!collapsed && <h1 className="md:hidden text-lg font-semibold leading-none">
+              Voi
+              <span className="bg-gradient-to-r from-purple-500 to-indigo-500 bg-clip-text text-transparent">
+                Tzu
+              </span>
+            </h1>}
+          </div>
 
           {!collapsed && (
             <button onClick={() => setCollapsed(true)} className="hidden md:block text-gray-400">
@@ -1080,20 +1103,32 @@ export default function ChatSidebar({
         <button
           onClick={() => guard(onNewChat)}
           className={`
-            mx-2 mb-3 h-12 rounded-xl
-            bg-gradient-to-r from-purple-600 to-indigo-600
-            flex items-center
-            ${collapsed ? "justify-center px-0" : "gap-2 px-3"}
-          `}
+    mx-2 mb-3 h-12 rounded-xl
+    bg-gradient-to-r from-purple-600 to-indigo-600
+    flex items-center overflow-hidden
+    ${collapsed ? "justify-center px-0" : "gap-2 px-3"}
+  `}
         >
-          <Plus size={18} />
-          {!collapsed && <span>New Chat</span>}
+          {/* ICON wrapper supaya tidak ikut ketarik */}
+          <div className="flex items-center justify-center min-w-[18px] shrink-0">
+            <Plus size={18} />
+          </div>
+
+          {/* TEXT */}
+          <span
+            className={`
+      whitespace-nowrap transition-all duration-300 ease-out
+      ${collapsed
+                ? "opacity-0 translate-x-[-6px] w-0"
+                : "opacity-100 translate-x-0 delay-150 w-auto"}
+    `}
+          >
+            New Chat
+          </span>
         </button>
 
         {/* ITEMS */}
-        <div className="flex-1 px-2 space-y-1 overflow-y-auto">
           {!collapsed && <div className="text-xs text-gray-400 px-3 mt-2">Tools</div>}
-
           <Item icon={<Search size={18} />} label="Search" collapsed={collapsed} onClick={() => guard(onOpenSearch)} />
           <Item icon={<ImageIcon size={18} />} label="Images" collapsed={collapsed} onClick={() => guard(onOpenImages)} />
 
@@ -1169,6 +1204,8 @@ export default function ChatSidebar({
               </div>
             </div>
           )}
+        <div className="flex-1 px-2 space-y-1 overflow-y-auto">
+
 
           {!collapsed &&
             displayRecent.map((c) => (
@@ -1246,7 +1283,7 @@ export default function ChatSidebar({
         </div>
 
         {/* USER */}
-        <div ref={ref} className="relative p-2 border-t border-white/5">
+        <div ref={ref} className="fixed bottom-0 relative p-2 border-t border-white/5">
           {/* Changed from button -> div so we can render a proper Upgrade button inside without nested <button> */}
           <div
             onClick={() => guard(() => setMenuOpen((v) => !v))}
@@ -1258,7 +1295,7 @@ export default function ChatSidebar({
                 guard(() => setMenuOpen((v) => !v));
               }
             }}
-            className={`w-full h-auto py-2 rounded-xl hover:bg-white/5 flex items-center ${collapsed ? "justify-center px-0" : "gap-3 px-2"}`}
+            className={`w-full h-auto py-2 rounded-xl flex items-center ${collapsed ? "justify-center px-0" : "gap-3 px-2 hover:bg-white/5"}`}
           >
             {/* avatar: if avatarPreview present show image, otherwise show initial with deterministic bg color */}
             {avatarPreview ? (
@@ -1310,7 +1347,13 @@ export default function ChatSidebar({
           {menuOpen && !collapsed && (
             <div className="absolute bottom-20 left-3 right-3 bg-[#1f1f1f] rounded-xl p-2 text-sm">
               <MenuItem label="Profile" onClick={() => { setProfileOpen(true); if (onOpenProfile) onOpenProfile(); }} />
-              <MenuItem label="Settings" onClick={() => { setSettingsOpen(true); if (onOpenSettings) onOpenSettings(); }} />
+              <MenuItem label="Settings" 
+              onClick={() => {
+  guard(() => {
+    setSettingsOpen(true);
+    onOpenSettings?.();
+  });
+}}/>
               <button onClick={async () => { await supabase.auth.signOut(); location.href = "/login"; }} className="w-full text-left px-3 py-2 text-red-400 rounded-lg hover:bg-white/10">
                 Logout
               </button>
@@ -1318,6 +1361,96 @@ export default function ChatSidebar({
           )}
         </div>
       </aside>
+
+{mounted && (
+  <div className="fixed inset-0 z-[50] flex">
+
+    {/* overlay */}
+    <div
+      className={`absolute inset-0 bg-black/40 backdrop-blur-sm transition-opacity duration-300
+      ${animateIn ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`}
+      onClick={() => setSettingsOpen(false)}
+    />
+
+    {/* panel */}
+    <div
+      onTransitionEnd={() => {
+        if (!animateIn) setMounted(false);
+      }}
+      className={`relative ml-auto flex-shrink-0 h-full w-full sm:w-[380px]
+      bg-zinc-950 border-l border-white/10 shadow-2xl flex flex-col
+      transform transition-transform duration-300 ease-out will-change-transform
+      ${animateIn ? "translate-x-0" : "translate-x-full"}`}
+    >
+      
+      {/* header */}
+      <div className="px-5 py-4 border-b border-white/10 flex items-center justify-between">
+        <div className="text-sm font-semibold">Settings</div>
+
+        <button
+          onClick={() => setSettingsOpen(false)}
+          className="text-white/60 hover:text-white text-sm"
+        >
+          ✕
+        </button>
+      </div>
+
+      {/* content */}
+      <div className="flex-1 overflow-y-auto p-5 space-y-5">
+        
+        {/* Account */}
+        <div className="space-y-2">
+          <div className="text-xs text-white/40 uppercase tracking-wider">
+            Account
+          </div>
+
+          <button
+            onClick={() => {
+              setSettingsOpen(false);
+              setProfileOpen(true);
+            }}
+            className="w-full text-left px-3 py-2 rounded-lg hover:bg-white/5 transition"
+          >
+            Profile
+          </button>
+        </div>
+
+        {/* Chat */}
+        <div className="space-y-2">
+          <div className="text-xs text-white/40 uppercase tracking-wider">
+            Chat
+          </div>
+
+          <button
+            onClick={() => setShowClearLogsModal(true)}
+            className="w-full text-left px-3 py-2 rounded-lg hover:bg-white/5 transition"
+          >
+            Clear chat logs
+          </button>
+
+          <button
+            onClick={() => setShowResetModal(true)}
+            className="w-full text-left px-3 py-2 rounded-lg hover:bg-white/5 transition"
+          >
+            Reset AI memory
+          </button>
+        </div>
+
+        {/* Appearance */}
+        <div className="space-y-2">
+          <div className="text-xs text-white/40 uppercase tracking-wider">
+            Appearance
+          </div>
+
+          <div className="px-3 py-2 rounded-lg bg-white/5 text-sm text-white/70">
+            Theme customization coming soon
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+)}
 
       {/* Portal dropdown: rendered outside sidebar (document.body) */}
       {typeof document !== "undefined" && openMenuId && anchorRect && createPortal(
@@ -1327,7 +1460,7 @@ export default function ChatSidebar({
 
           const DROPDOWN_WIDTH = 220;
           let left = Math.min(Math.max(anchorRect.left, 8), window.innerWidth - DROPDOWN_WIDTH - 8);
-          const top = anchorRect.bottom + 8;
+          const top = anchorRect.bottom + -225;
 
           return (
             <div ref={dropdownRef} onClick={(e) => e.stopPropagation()} style={{ position: "fixed", top: `${top}px`, left: `${left}px`, width: DROPDOWN_WIDTH, zIndex: 9999 }} className="bg-[#111] rounded-xl border border-white/10 shadow-xl overflow-hidden text-sm">
@@ -1368,7 +1501,7 @@ export default function ChatSidebar({
       {/* Sidebar delete confirm modal */}
       <AnimatePresence>
         {deleteModalOpen && deleteTarget && (
-          <motion.div className="fixed inset-0 z-60 bg-black/60 flex items-center justify-center" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => { if (!deleting) cancelDeleteSession(); }}>
+          <motion.div className="fixed inset-0 z-100 bg-black/60 flex items-center justify-center" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => { if (!deleting) cancelDeleteSession(); }}>
             <motion.div onClick={(e) => e.stopPropagation()} initial={{ scale: 0.98, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.98, opacity: 0 }} transition={{ duration: 0.12 }} className="w-[92%] max-w-md bg-[#111] rounded-2xl p-5">
               <h3 className="text-lg font-semibold">Delete Chat History</h3>
               <p className="text-sm text-gray-400 mt-2">
@@ -1396,7 +1529,7 @@ export default function ChatSidebar({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-70 bg-black/70 flex items-center justify-center"
+            className="fixed inset-0 z-100 bg-black/70 flex items-center justify-center"
             onClick={() => setProfileOpen(false)}
           >
             <motion.div
@@ -1480,19 +1613,19 @@ export default function ChatSidebar({
                 <div className="md:col-span-2">
                   <div className="mb-3">
                     <label className="text-xs text-gray-400">Name</label>
-                    <input 
-                    value={formName} 
-                    onChange={(e) => setFormName(e.target.value)} 
-                    className="w-full mt-1 p-2 rounded-lg bg-black/40 outline-none border-none  " />
+                    <input
+                      value={formName}
+                      onChange={(e) => setFormName(e.target.value)}
+                      className="w-full mt-1 p-2 rounded-lg bg-black/40 outline-none border-none  " />
                   </div>
 
                   <div className="mb-3">
                     <label className="text-xs text-gray-400">Username (e.g: @username)</label>
-                    <input 
-                    value={formUsername} 
-                    onChange={(e) => setFormUsername(e.target.value)} 
-                    placeholder="@username" 
-                    className="w-full mt-1 p-2 rounded-lg bg-black/40 outline-none border-none" />
+                    <input
+                      value={formUsername}
+                      onChange={(e) => setFormUsername(e.target.value)}
+                      placeholder="@username"
+                      className="w-full mt-1 p-2 rounded-lg bg-black/40 outline-none border-none" />
                   </div>
 
                   <div className="flex gap-2 mt-4">
@@ -1517,7 +1650,7 @@ export default function ChatSidebar({
                 <div className="max-h-36 overflow-auto bg-[#0b0b0b] rounded-lg p-3 border border-white/5">
                   {profileLogs.length === 0 ? (
                     <div className="text-xs text-gray-400">
-No history yet. Any changes will be noted.</div>
+                      No history yet. Any changes will be noted.</div>
                   ) : (
                     <ul className="space-y-2">
                       {profileLogs.map((l) => (
@@ -1538,7 +1671,7 @@ No history yet. Any changes will be noted.</div>
       {/* color modal */}
       <AnimatePresence>
         {showColorModal && (
-          <motion.div className="fixed inset-0 z-90 bg-black/70 flex items-center justify-center" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+          <motion.div className="fixed inset-0 z-100 bg-black/70 flex items-center justify-center" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
             <motion.div onClick={(e) => e.stopPropagation()} initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 10, opacity: 0 }} transition={{ duration: 0.12 }} className="w-[92%] max-w-md bg-[#0b0b0b] rounded-2xl p-5">
               <h3 className="text-lg font-semibold mb-3">Custom color</h3>
               <p className="text-sm text-gray-400 mb-3">Enter the hex code (e.g: #ff0000) or select from the picker.</p>
@@ -1588,16 +1721,16 @@ No history yet. Any changes will be noted.</div>
               <h3 className="text-lg font-semibold">Delete Profile Logs</h3>
               <p className="text-sm text-gray-400 mt-2">Delete all profile edit history? This action is permanent.</p>
               <div className="mt-4 flex gap-3 justify-end">
-                <button 
-                onClick={() => setShowClearLogsModal(false)} 
-                className="
+                <button
+                  onClick={() => setShowClearLogsModal(false)}
+                  className="
                 px-4 py-2 rounded-lg bg-white/10
                 hover:bg-white/20 active:bg-white/20">
                   Cancel
                 </button>
-                <button 
-                onClick={doClearLogs} 
-                className="
+                <button
+                  onClick={doClearLogs}
+                  className="
                 px-4 py-2 rounded-lg bg-red-600
                 hover:bg-red-500 active:bg-red-500
                 ">
