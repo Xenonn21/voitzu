@@ -809,34 +809,6 @@ export default function ChatClient() {
       </button>
     )}
 
-    {/* Search (HEADER) */}
-    {user && (
-      <button
-        onClick={() => {
-          setOverlay("search");
-          fetchRecentForSearch();
-        }}
-        className="p-2 rounded-lg hover:bg-white/10 text-gray-400 hover:text-white transition"
-        title="Search"
-      >
-        <SearchIcon size={18} />
-      </button>
-    )}
-
-    {/* Images (HEADER) */}
-    {user && (
-      <button
-        onClick={() => {
-          setOverlay("images");
-          fetchImagesForUser();
-        }}
-        className="p-2 rounded-lg hover:bg-white/10 text-gray-400 hover:text-white transition"
-        title="Images"
-      >
-        <ImageIcon size={18} />
-      </button>
-    )}
-
     {/* Share */}
     {user && (
       <button
@@ -849,7 +821,7 @@ export default function ChatClient() {
 >
   <Share2 size={18} />
 </button>
-    )}
+    )}  
 
 {/* MORE */}
 {user && (
