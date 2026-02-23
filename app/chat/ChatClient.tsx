@@ -939,18 +939,46 @@ export default function ChatClient() {
                       }`}
                   >
                     {/* MESSAGE CONTENT */}
-                    <ReactMarkdown
-                      remarkPlugins={[remarkGfm]}
-                      components={{
-                        code: CodeBlock,
-                        hr: () => (
-                          <div className="my-6 h-px w-full bg-gradient-to-r from-transparent via-white/15 to-transparent" />
-                        ),
-                      }}
-                    >
-                      {m.content}
-                    </ReactMarkdown>
+<ReactMarkdown
+  remarkPlugins={[remarkGfm]}
+  components={{
+    code: CodeBlock,
 
+    hr: () => (
+      <div className="my-4 h-px w-full bg-gradient-to-r from-transparent via-white/15 to-transparent" />
+    ),
+
+    table: ({ children }) => (
+      <div className="overflow-x-auto my-3">
+        <table className="w-full border border-white/10 rounded-lg text-sm">
+          {children}
+        </table>
+      </div>
+    ),
+
+    thead: ({ children }) => (
+      <thead className="bg-white/5">{children}</thead>
+    ),
+
+    th: ({ children }) => (
+      <th className="px-3 py-2 text-left border-b border-white/10 font-semibold">
+        {children}
+      </th>
+    ),
+
+    td: ({ children }) => (
+      <td className="px-3 py-2 border-b border-white/5 align-top">
+        {children}
+      </td>
+    ),
+
+    tr: ({ children }) => (
+      <tr className="hover:bg-white/5 transition">{children}</tr>
+    ),
+  }}
+>
+  {m.content}
+</ReactMarkdown>
                     {/* ACTION BUTTONS — SELALU MUNCUL */}
                     <div className="mt-3 flex gap-4 text-xs text-gray-400">
                       {/* COPY */}
