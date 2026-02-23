@@ -771,145 +771,145 @@ export default function ChatClient() {
       {user && <ReportSuccessToast />}
 
       <div className="flex-1 flex flex-col relative">
-{/* HEADER */}
-<header className="sticky top-0 z-10 bg-black border-b border-white/5 px-4 md:px-6 py-2 flex justify-between items-center">
-  {/* LEFT */}
-  <div className="flex items-center gap-3">
-    {user && (
-      <button
-        onClick={() => setSidebarOpen(true)}
-        className="md:hidden text-gray-400 hover:text-white"
-        aria-label="Open sidebar"
-      >
-        ☰
-      </button>
-    )}
+        {/* HEADER */}
+        <header className="sticky top-0 z-10 bg-black border-b border-white/5 px-4 md:px-6 py-2 flex justify-between items-center">
+          {/* LEFT */}
+          <div className="flex items-center gap-3">
+            {user && (
+              <button
+                onClick={() => setSidebarOpen(true)}
+                className="md:hidden text-gray-400 hover:text-white"
+                aria-label="Open sidebar"
+              >
+                ☰
+              </button>
+            )}
 
-    <div>
-      <h1 className="text-lg font-semibold leading-none">
-        Voi
-        <span className="bg-gradient-to-r from-purple-500 to-indigo-500 bg-clip-text text-transparent">
-          Tzu
-        </span>
-      </h1>
-      <p className="text-[10px] tracking-widest text-gray-500 uppercase">
-        Arcane Void Intelligence
-      </p>
-    </div>
-  </div>
+            <div>
+              <h1 className="text-lg font-semibold leading-none">
+                Voi
+                <span className="bg-gradient-to-r from-purple-500 to-indigo-500 bg-clip-text text-transparent">
+                  Tzu
+                </span>
+              </h1>
+              <p className="text-[10px] tracking-widest text-gray-500 uppercase">
+                Arcane Void Intelligence
+              </p>
+            </div>
+          </div>
 
-  {/* RIGHT */}
-  <div className="flex items-center gap-2">
-    {/* Upgrade (desktop only) */}
-    {user && (
-      <button className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium
+          {/* RIGHT */}
+          <div className="flex items-center gap-2">
+            {/* Upgrade (desktop only) */}
+            {user && (
+              <button className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium
         bg-gradient-to-r from-purple-600 to-indigo-600 hover:opacity-90 transition">
-        <Sparkles size={14} />
-        Upgrade Pro
-      </button>
-    )}
+                <Sparkles size={14} />
+                Upgrade Pro
+              </button>
+            )}
 
-    {/* Share */}
-    {user && (
-      <button
-  onClick={() => {
-    if (!sessionId) { toast("Tidak ada session untuk dibagikan"); return; }
-    openSharePanelWith(`${location.origin}/chat/${sessionId}`);
-  }}
-  className="p-2 rounded-lg hover:bg-white/10 text-gray-400 hover:text-white transition"
-  title="Share"
->
-  <Share2 size={18} />
-</button>
-    )}  
+            {/* Share */}
+            {user && (
+              <button
+                onClick={() => {
+                  if (!sessionId) { toast("Tidak ada session untuk dibagikan"); return; }
+                  openSharePanelWith(`${location.origin}/chat/${sessionId}`);
+                }}
+                className="p-2 rounded-lg hover:bg-white/10 text-gray-400 hover:text-white transition"
+                title="Share"
+              >
+                <Share2 size={18} />
+              </button>
+            )}
 
-{/* MORE */}
-{user && (
-  <div ref={moreRef} className="relative">
-    <button
-      onClick={() => setMoreOpen((v) => !v)}
-      className="p-2 rounded-lg hover:bg-white/10 text-gray-400 hover:text-white transition"
-      title="More"
-    >
-      <MoreHorizontal size={18} />
-    </button>
+            {/* MORE */}
+            {user && (
+              <div ref={moreRef} className="relative">
+                <button
+                  onClick={() => setMoreOpen((v) => !v)}
+                  className="p-2 rounded-lg hover:bg-white/10 text-gray-400 hover:text-white transition"
+                  title="More"
+                >
+                  <MoreHorizontal size={18} />
+                </button>
 
-    <AnimatePresence>
-      {moreOpen && (
-        <motion.div
-          initial={{ opacity: 0, y: 6, scale: 0.98 }}
-          animate={{ opacity: 1, y: 0, scale: 1 }}
-          exit={{ opacity: 0, y: 6, scale: 0.98 }}
-          transition={{ duration: 0.15 }}
-          className="absolute right-0 mt-2 w-48 rounded-xl bg-[#111] border border-white/10 shadow-xl overflow-hidden z-50"
-        >
-          <DropdownItem
-  icon={<Pin size={14} />}
-  label={headerPinned ? "Unpin chat" : "Pin chat"}
-  onClick={async () => {
-    if (!sessionId) { toast("Tidak ada session"); setMoreOpen(false); return; }
-    try {
-      const { data: sessionData } = await supabase.from("chat_sessions").select("pinned").eq("id", sessionId).maybeSingle();
-      const currentPinned = sessionData?.pinned ?? false;
-      await supabase.from("chat_sessions").update({ pinned: !currentPinned }).eq("id", sessionId);
-      toast(!currentPinned ? "Chat disematkan" : "Penyematan dibatalkan");
-      setSidebarRefreshKey((k) => k + 1);
-    } catch (e) {
-      console.error("toggle pin error", e);
-      toast("Gagal memperbarui penyematan");
-    } finally {
-      setMoreOpen(false);
-    }
-  }}
-/>
+                <AnimatePresence>
+                  {moreOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 6, scale: 0.98 }}
+                      animate={{ opacity: 1, y: 0, scale: 1 }}
+                      exit={{ opacity: 0, y: 6, scale: 0.98 }}
+                      transition={{ duration: 0.15 }}
+                      className="absolute right-0 mt-2 w-48 rounded-xl bg-[#111] border border-white/10 shadow-xl overflow-hidden z-50"
+                    >
+                      <DropdownItem
+                        icon={<Pin size={14} />}
+                        label={headerPinned ? "Unpin chat" : "Pin chat"}
+                        onClick={async () => {
+                          if (!sessionId) { toast("Tidak ada session"); setMoreOpen(false); return; }
+                          try {
+                            const { data: sessionData } = await supabase.from("chat_sessions").select("pinned").eq("id", sessionId).maybeSingle();
+                            const currentPinned = sessionData?.pinned ?? false;
+                            await supabase.from("chat_sessions").update({ pinned: !currentPinned }).eq("id", sessionId);
+                            toast(!currentPinned ? "Chat disematkan" : "Penyematan dibatalkan");
+                            setSidebarRefreshKey((k) => k + 1);
+                          } catch (e) {
+                            console.error("toggle pin error", e);
+                            toast("Gagal memperbarui penyematan");
+                          } finally {
+                            setMoreOpen(false);
+                          }
+                        }}
+                      />
 
-<DropdownItem
-  icon={<Archive size={14} />}
-  label={headerArchived ? "Restore from archive" : "Archive"}
-  onClick={async () => {
-    if (!sessionId) { toast("Tidak ada session"); setMoreOpen(false); return; }
-    try {
-      const { data: sessionData } = await supabase.from("chat_sessions").select("archived").eq("id", sessionId).maybeSingle();
-      const currentArchived = sessionData?.archived ?? false;
-      await supabase.from("chat_sessions").update({ archived: !currentArchived }).eq("id", sessionId);
-      toast(!currentArchived ? "Chat diarsipkan" : "Pemulihan arsip berhasil");
-      setSidebarRefreshKey((k) => k + 1);
-    } catch (e) {
-      console.error("toggle archive error", e);
-      toast("Gagal memperbarui arsip");
-    } finally {
-      setMoreOpen(false);
-    }
-  }}
-/>
+                      <DropdownItem
+                        icon={<Archive size={14} />}
+                        label={headerArchived ? "Restore from archive" : "Archive"}
+                        onClick={async () => {
+                          if (!sessionId) { toast("Tidak ada session"); setMoreOpen(false); return; }
+                          try {
+                            const { data: sessionData } = await supabase.from("chat_sessions").select("archived").eq("id", sessionId).maybeSingle();
+                            const currentArchived = sessionData?.archived ?? false;
+                            await supabase.from("chat_sessions").update({ archived: !currentArchived }).eq("id", sessionId);
+                            toast(!currentArchived ? "Chat diarsipkan" : "Pemulihan arsip berhasil");
+                            setSidebarRefreshKey((k) => k + 1);
+                          } catch (e) {
+                            console.error("toggle archive error", e);
+                            toast("Gagal memperbarui arsip");
+                          } finally {
+                            setMoreOpen(false);
+                          }
+                        }}
+                      />
 
-<DropdownItem
-  icon={<Flag size={14} />}
-  label="Report chat"
-  onClick={() => { setReportModalOpen(true); setMoreOpen(false); }}
-/>
+                      <DropdownItem
+                        icon={<Flag size={14} />}
+                        label="Report chat"
+                        onClick={() => { setReportModalOpen(true); setMoreOpen(false); }}
+                      />
 
-<div className="h-px bg-white/10 my-1" />
+                      <div className="h-px bg-white/10 my-1" />
 
-<DropdownItem
-  icon={<Trash2 size={14} />}
-  label="Delete chat"
-  danger
-  onClick={() => {
-    // open modal instead of confirm
-    openDeleteModal();
-  }}
-/>
-        </motion.div>
-      )}
-    </AnimatePresence>
-  </div>
-)}
+                      <DropdownItem
+                        icon={<Trash2 size={14} />}
+                        label="Delete chat"
+                        danger
+                        onClick={() => {
+                          // open modal instead of confirm
+                          openDeleteModal();
+                        }}
+                      />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            )}
 
-    {/* Auth (guest only) */}
-    {!user && <AuthButtons />}
-  </div>
-</header>
+            {/* Auth (guest only) */}
+            {!user && <AuthButtons />}
+          </div>
+        </header>
 
         {/* CHAT */}
         <div className="flex-1 flex flex-col pt-5 min-h-0">{/* min-h-0 to make flex child scroll correctly */}
@@ -929,9 +929,9 @@ export default function ChatClient() {
                   className={`flex gap-2 ${m.role === "user" ? "justify-end" : "justify-start"
                     }`}
                 >
-                 
+
                   <div
-                    className={`px-4 py-3 rounded-2xl text-sm max-w-[100%] min-w-0
+                    className={`px-4 py-3 rounded-2xl text-sm max-w-[100%] md:max-w-[95%] min-w-0
   prose prose-invert prose-sm space-y-4 break-words whitespace-pre-wrap
   ${m.role === "user"
                         ? "bg-[#2f2f2f] rounded-br-sm"
@@ -939,46 +939,46 @@ export default function ChatClient() {
                       }`}
                   >
                     {/* MESSAGE CONTENT */}
-<ReactMarkdown
-  remarkPlugins={[remarkGfm]}
-  components={{
-    code: CodeBlock,
+                    <ReactMarkdown
+                      remarkPlugins={[remarkGfm]}
+                      components={{
+                        code: CodeBlock,
 
-    hr: () => (
-      <div className="my-4 h-px w-full bg-gradient-to-r from-transparent via-white/15 to-transparent" />
-    ),
+                        hr: () => (
+                          <div className="my-4 h-px w-full bg-gradient-to-r from-transparent via-white/15 to-transparent" />
+                        ),
 
-    table: ({ children }) => (
-      <div className="overflow-x-auto my-3">
-        <table className="w-full border border-white/10 rounded-lg text-sm">
-          {children}
-        </table>
-      </div>
-    ),
+                        table: ({ children }) => (
+                          <div className="overflow-x-auto my-3">
+                            <table className="w-full border border-white/10 rounded-lg text-sm">
+                              {children}
+                            </table>
+                          </div>
+                        ),
 
-    thead: ({ children }) => (
-      <thead className="bg-white/5">{children}</thead>
-    ),
+                        thead: ({ children }) => (
+                          <thead className="bg-white/5">{children}</thead>
+                        ),
 
-    th: ({ children }) => (
-      <th className="px-3 py-2 text-left border-b border-white/10 font-semibold">
-        {children}
-      </th>
-    ),
+                        th: ({ children }) => (
+                          <th className="px-3 py-2 text-left border-b border-white/10 font-semibold">
+                            {children}
+                          </th>
+                        ),
 
-    td: ({ children }) => (
-      <td className="px-3 py-2 border-b border-white/5 align-top">
-        {children}
-      </td>
-    ),
+                        td: ({ children }) => (
+                          <td className="px-3 py-2 border-b border-white/5 align-top">
+                            {children}
+                          </td>
+                        ),
 
-    tr: ({ children }) => (
-      <tr className="hover:bg-white/5 transition">{children}</tr>
-    ),
-  }}
->
-  {m.content}
-</ReactMarkdown>
+                        tr: ({ children }) => (
+                          <tr className="hover:bg-white/5 transition">{children}</tr>
+                        ),
+                      }}
+                    >
+                      {m.content}
+                    </ReactMarkdown>
                     {/* ACTION BUTTONS — SELALU MUNCUL */}
                     <div className="mt-3 flex gap-4 text-xs text-gray-400">
                       {/* COPY */}
@@ -1402,19 +1402,19 @@ export default function ChatClient() {
               <h3 className="text-lg font-semibold">Report</h3>
               <p className="text-sm text-gray-400 mt-2">Please fill in the title and description of the report.</p>
 
-              <input 
-              value={reportTitle} 
-              onChange={(e) => setReportTitle(e.target.value)} 
-              placeholder="Report title" 
-              className="
+              <input
+                value={reportTitle}
+                onChange={(e) => setReportTitle(e.target.value)}
+                placeholder="Report title"
+                className="
               w-full bg-black/40 rounded-lg p-2 mt-3
               border-none outline-none
               " />
-              <textarea 
-              value={reportDesc} 
-              onChange={(e) => setReportDesc(e.target.value)} 
-              placeholder="Report description" 
-              className="
+              <textarea
+                value={reportDesc}
+                onChange={(e) => setReportDesc(e.target.value)}
+                placeholder="Report description"
+                className="
               w-full bg-black/40 rounded-lg p-2 mt-3 h-28 resize-none
               border-none outline-none" />
 
@@ -1457,7 +1457,7 @@ export default function ChatClient() {
             >
               <h3 className="text-lg font-semibold">Delete Chat History</h3>
               <p className="text-sm text-gray-400 mt-2">
-                Are you sure you want to delete this chat? This action cannot be undone. 
+                Are you sure you want to delete this chat? This action cannot be undone.
                 All messages in the chat will be deleted.
 
               </p>
