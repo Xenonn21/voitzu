@@ -922,7 +922,7 @@ export default function ChatClient() {
 
             {!loadingMessages && messages.length === 0 && <TextAnimation />}
 
-            <div className="mx-auto w-full max-w-4xl px-4 sm:px-6 py-8 space-y-3">
+            <div className="mx-auto w-full max-w-4xl px-4 sm:px-6 py-8">
               {messages.map((m) => (
                 <div
                   key={m.id}
