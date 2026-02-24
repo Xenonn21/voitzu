@@ -20,7 +20,7 @@ import {
   Copy,
   WrapText,
   Share2,
-  MoreVertical,
+  MoreHorizontal,
   Sparkles,
   Pin,
   Archive,
@@ -831,7 +831,7 @@ export default function ChatClient() {
                   className="p-2 rounded-lg hover:bg-white/10 text-gray-400 hover:text-white transition"
                   title="More"
                 >
-                  <MoreVertical size={18} />
+                  <MoreHorizontal size={18} />
                 </button>
 
                 <AnimatePresence>
