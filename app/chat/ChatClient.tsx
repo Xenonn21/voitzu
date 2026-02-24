@@ -938,18 +938,46 @@ export default function ChatClient() {
                         : "bg-[#1f1f1f] rounded-bl-sm"
                       }`}
                   >
-                    {/* MESSAGE CONTENT */}
+
                     <ReactMarkdown
                       remarkPlugins={[remarkGfm]}
                       components={{
                         code: CodeBlock,
 
+                        /* 🔥 INI YANG BIKIN RAPAT */
+                        p: ({ children }) => (
+                          <p className="my-1 leading-relaxed">{children}</p>
+                        ),
+
+                        h1: ({ children }) => (
+                          <h1 className="mt-3 mb-1 text-lg font-bold">{children}</h1>
+                        ),
+
+                        h2: ({ children }) => (
+                          <h2 className="mt-3 mb-1 text-base font-bold">{children}</h2>
+                        ),
+
+                        h3: ({ children }) => (
+                          <h3 className="mt-2 mb-1 font-semibold">{children}</h3>
+                        ),
+
+                        ul: ({ children }) => (
+                          <ul className="my-1 pl-5 list-disc">{children}</ul>
+                        ),
+
+                        ol: ({ children }) => (
+                          <ol className="my-1 pl-5 list-decimal">{children}</ol>
+                        ),
+
+                        /* 🔥 BIANG GAP TERBESAR */
+                        pre: ({ children }) => <div className="my-2">{children}</div>,
+
                         hr: () => (
-                          <div className="my-4 h-px w-full bg-gradient-to-r from-transparent via-white/15 to-transparent" />
+                          <div className="my-3 h-px w-full bg-gradient-to-r from-transparent via-white/15 to-transparent" />
                         ),
 
                         table: ({ children }) => (
-                          <div className="overflow-x-auto my-3">
+                          <div className="overflow-x-auto my-2">
                             <table className="w-full border border-white/10 rounded-lg text-sm">
                               {children}
                             </table>
@@ -979,6 +1007,7 @@ export default function ChatClient() {
                     >
                       {m.content}
                     </ReactMarkdown>
+
                     {/* ACTION BUTTONS — SELALU MUNCUL */}
                     <div className="mt-3 flex gap-4 text-xs text-gray-400">
                       {/* COPY */}
