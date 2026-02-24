@@ -190,3 +190,28 @@ body {
 .prose > *:last-child {
   margin-bottom: 0 !important;
 }
+
+/* ===== FORCE COMPACT MARKDOWN ===== */
+
+.prose :where(h1,h2,h3) {
+  margin-top: 0.8em !important;
+  margin-bottom: 0.3em !important;
+}
+
+.prose :where(p,ul,ol) {
+  margin-top: 0.35em !important;
+  margin-bottom: 0.35em !important;
+}
+
+.prose :where(pre,table) {
+  margin-top: 0.5em !important;
+  margin-bottom: 0.5em !important;
+}
+
+.prose > *:first-child {
+  margin-top: 0 !important;
+}
+
+.prose > *:last-child {
+  margin-bottom: 0 !important;
+}

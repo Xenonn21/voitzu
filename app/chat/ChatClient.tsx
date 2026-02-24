@@ -1678,7 +1678,7 @@ const CodeBlock: Components["code"] = ({ className, children }) => {
     <motion.div
       initial={{ opacity: 0, y: 6 }}
       animate={{ opacity: 1, y: 0 }}
-      className="my-6 rounded-xl border border-white/10 overflow-hidden group"
+      className="my-2 rounded-xl border border-white/10 overflow-hidden group"
     >
       {/* HEADER */}
       <div
