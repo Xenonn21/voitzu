@@ -939,74 +939,78 @@ export default function ChatClient() {
                       }`}
                   >
 
-                    <ReactMarkdown
-                      remarkPlugins={[remarkGfm]}
-                      components={{
-                        code: CodeBlock,
+<ReactMarkdown
+  remarkPlugins={[remarkGfm]}
+  components={{
+    code: CodeBlock,
 
-                        /* 🔥 INI YANG BIKIN RAPAT */
-                        p: ({ children }) => (
-                          <p className="my-1 leading-relaxed">{children}</p>
-                        ),
+    /* ✅ paragraph compact */
+    p: ({ children }) => (
+      <p className="my-1 leading-relaxed">{children}</p>
+    ),
 
-                        h1: ({ children }) => (
-                          <h1 className="mt-3 mb-1 text-lg font-bold">{children}</h1>
-                        ),
+    /* ✅ heading compact */
+    h1: ({ children }) => (
+      <h1 className="mt-3 mb-1 text-lg font-bold">{children}</h1>
+    ),
+    h2: ({ children }) => (
+      <h2 className="mt-3 mb-1 text-base font-bold">{children}</h2>
+    ),
+    h3: ({ children }) => (
+      <h3 className="mt-2 mb-1 font-semibold">{children}</h3>
+    ),
 
-                        h2: ({ children }) => (
-                          <h2 className="mt-3 mb-1 text-base font-bold">{children}</h2>
-                        ),
+    /* ✅ LIST FIX (INI YANG PALING PENTING) */
+    ul: ({ children }) => (
+      <ul className="my-1 pl-5 list-disc space-y-1">{children}</ul>
+    ),
+    ol: ({ children }) => (
+      <ol className="my-1 pl-5 list-decimal space-y-1">{children}</ol>
+    ),
 
-                        h3: ({ children }) => (
-                          <h3 className="mt-2 mb-1 font-semibold">{children}</h3>
-                        ),
+    /* 🔥 remove double spacing inside li */
+    li: ({ children }) => (
+      <li className="[&>p]:my-0 my-1 leading-relaxed">{children}</li>
+    ),
 
-                        ul: ({ children }) => (
-                          <ul className="my-1 pl-5 list-disc">{children}</ul>
-                        ),
+    /* ✅ prevent pre margin from ReactMarkdown */
+    pre: ({ children }) => <div className="my-2">{children}</div>,
 
-                        ol: ({ children }) => (
-                          <ol className="my-1 pl-5 list-decimal">{children}</ol>
-                        ),
+    hr: () => (
+      <div className="my-3 h-px w-full bg-gradient-to-r from-transparent via-white/15 to-transparent" />
+    ),
 
-                        /* 🔥 BIANG GAP TERBESAR */
-                        pre: ({ children }) => <div className="my-2">{children}</div>,
+    table: ({ children }) => (
+      <div className="overflow-x-auto my-2">
+        <table className="w-full border border-white/10 rounded-lg text-sm">
+          {children}
+        </table>
+      </div>
+    ),
 
-                        hr: () => (
-                          <div className="my-3 h-px w-full bg-gradient-to-r from-transparent via-white/15 to-transparent" />
-                        ),
+    thead: ({ children }) => (
+      <thead className="bg-white/5">{children}</thead>
+    ),
 
-                        table: ({ children }) => (
-                          <div className="overflow-x-auto my-2">
-                            <table className="w-full border border-white/10 rounded-lg text-sm">
-                              {children}
-                            </table>
-                          </div>
-                        ),
+    th: ({ children }) => (
+      <th className="px-3 py-2 text-left border-b border-white/10 font-semibold">
+        {children}
+      </th>
+    ),
 
-                        thead: ({ children }) => (
-                          <thead className="bg-white/5">{children}</thead>
-                        ),
+    td: ({ children }) => (
+      <td className="px-3 py-2 border-b border-white/5 align-top">
+        {children}
+      </td>
+    ),
 
-                        th: ({ children }) => (
-                          <th className="px-3 py-2 text-left border-b border-white/10 font-semibold">
-                            {children}
-                          </th>
-                        ),
-
-                        td: ({ children }) => (
-                          <td className="px-3 py-2 border-b border-white/5 align-top">
-                            {children}
-                          </td>
-                        ),
-
-                        tr: ({ children }) => (
-                          <tr className="hover:bg-white/5 transition">{children}</tr>
-                        ),
-                      }}
-                    >
-                      {m.content}
-                    </ReactMarkdown>
+    tr: ({ children }) => (
+      <tr className="hover:bg-white/5 transition">{children}</tr>
+    ),
+  }}
+>
+  {m.content}
+</ReactMarkdown>
 
                     {/* ACTION BUTTONS — SELALU MUNCUL */}
                     <div className="mt-3 flex gap-4 text-xs text-gray-400">
