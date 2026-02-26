@@ -1488,7 +1488,7 @@ export default function ChatClient() {
               transition={{ duration: 0.12 }}
               className="w-[90%] max-w-md bg-[#111] rounded-2xl p-5"
             >
-              <h3 className="text-lg font-semibold">Delete Chat History</h3>
+              <h3 className="text-lg font-semibold">Delete Chat</h3>
               <p className="text-sm text-gray-400 mt-2">
                 Are you sure you want to delete this chat? This action cannot be undone.
                 All messages in the chat will be deleted.

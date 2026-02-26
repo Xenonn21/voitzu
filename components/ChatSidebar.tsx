@@ -1503,7 +1503,7 @@ useEffect(() => {
         {deleteModalOpen && deleteTarget && (
           <motion.div className="fixed inset-0 z-100 bg-black/60 flex items-center justify-center" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => { if (!deleting) cancelDeleteSession(); }}>
             <motion.div onClick={(e) => e.stopPropagation()} initial={{ scale: 0.98, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} exit={{ scale: 0.98, opacity: 0 }} transition={{ duration: 0.12 }} className="w-[92%] max-w-md bg-[#111] rounded-2xl p-5">
-              <h3 className="text-lg font-semibold">Delete Chat History</h3>
+              <h3 className="text-lg font-semibold">Delete Chat</h3>
               <p className="text-sm text-gray-400 mt-2">
                 Are you sure you want to delete this chat? This action cannot be undone. All messages in the chat will be deleted.
               </p>
