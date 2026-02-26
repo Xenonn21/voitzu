@@ -27,7 +27,6 @@ PRINSIP UTAMA:
 FORMAT WAJIB:
 - Gunakan markdown rapi
 - Gunakan **judul tebal**
-- Pisahkan paragraf dengan baris kosong tapi jarak tidak terlalu jauh
 - Gunakan bullet atau numbering jika membantu
 - Gunakan code block untuk kode
 - Hindari paragraf panjang tanpa struktur
