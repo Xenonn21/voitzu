@@ -932,7 +932,7 @@ export default function ChatClient() {
 
                   <div
                     className={`px-4 py-3 rounded-2xl text-sm max-w-[100%] md:max-w-[95%] min-w-0
-  break-words whitespace-pre-wrap
+  prose prose-invert prose-sm space-y-4 break-words whitespace-pre-wrap
   ${m.role === "user"
                         ? "bg-[#2f2f2f] rounded-br-sm"
                         : "bg-[#1f1f1f] rounded-bl-sm"
